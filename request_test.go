@@ -21,7 +21,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Valid request with numeric ID",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "test",
 			},
 			wantErr: false,
@@ -30,7 +30,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Valid request with string ID",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &idString,
+				ID:      idString,
 				Method:  "test",
 			},
 			wantErr: false,
@@ -39,7 +39,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Valid request with null ID",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &idNull,
+				ID:      idNull,
 				Method:  "test",
 			},
 			wantErr: false,
@@ -56,7 +56,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Invalid version",
 			req: Request{
 				JSONRPC: "1.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "test",
 			},
 			wantErr: true,
@@ -66,7 +66,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Empty method",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "",
 			},
 			wantErr: true,
@@ -76,7 +76,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Invalid Params (not array or object)",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "test",
 				Params:  json.RawMessage(`123`),
 			},
@@ -87,7 +87,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Valid Params (array)",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "test",
 				Params:  json.RawMessage(`[1, 2]`),
 			},
@@ -97,7 +97,7 @@ func TestRequest_Validate(t *testing.T) {
 			name: "Valid Params (object)",
 			req: Request{
 				JSONRPC: "2.0",
-				ID:      &id1,
+				ID:      id1,
 				Method:  "test",
 				Params:  json.RawMessage(`{"a": 1}`),
 			},
@@ -126,7 +126,7 @@ func TestRequest_Validate(t *testing.T) {
 
 func TestRequest_IsNotification(t *testing.T) {
 	id := json.RawMessage(`1`)
-	req1 := Request{ID: &id}
+	req1 := Request{ID: id}
 	if req1.IsNotification() {
 		t.Errorf("Expected IsNotification to be false for request with ID")
 	}
@@ -140,13 +140,13 @@ func TestRequest_IsNotification(t *testing.T) {
 func TestNewRequest(t *testing.T) {
 	id := json.RawMessage(`"1"`)
 	params := []byte(`{"foo":"bar"}`)
-	req := NewRequest(&id, "test", params)
+	req := NewRequest(id, "test", params)
 
 	if req.JSONRPC != JSONRPCVersion {
 		t.Errorf("Expected JSONRPC %s, got %s", JSONRPCVersion, req.JSONRPC)
 	}
-	if string(*req.ID) != string(id) {
-		t.Errorf("Expected ID %s, got %s", string(id), string(*req.ID))
+	if string(req.ID) != string(id) {
+		t.Errorf("Expected ID %s, got %s", string(id), string(req.ID))
 	}
 	if req.Method != "test" {
 		t.Errorf("Expected method test, got %s", req.Method)

@@ -6,7 +6,7 @@ import (
 )
 
 // NewRequest creates a new Request object.
-func NewRequest(id *json.RawMessage, method string, params []byte) *Request {
+func NewRequest(id json.RawMessage, method string, params []byte) *Request {
 	return &Request{
 		JSONRPC: JSONRPCVersion,
 		ID:      id,
@@ -22,7 +22,7 @@ type Request struct {
 	// ID is an identifier established by the Client. It MUST contain a String,
 	// Number, or NULL value if included. If it is not included it is assumed
 	// to be a notification.
-	ID *json.RawMessage `json:"id,omitempty"`
+	ID json.RawMessage `json:"id,omitempty"`
 	// Method is a string containing the name of the method to be invoked.
 	Method string `json:"method"`
 	// Params is a structured value that holds the parameter values to be used
