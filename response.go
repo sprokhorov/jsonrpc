@@ -1,6 +1,9 @@
 package jsonrpc
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"errors"
+)
 
 // Error codes are defined in the JSON-RPC specification.
 type ErrorCode int
@@ -31,6 +34,11 @@ func (c ErrorCode) Message() string {
 // Error implements the error interface.
 func (c ErrorCode) Error() string {
 	return c.Message()
+}
+
+// GoError returns an error for the given JSON-RPC error code.
+func GoError(c ErrorCode) error {
+	return errors.New(c.Message())
 }
 
 const (
