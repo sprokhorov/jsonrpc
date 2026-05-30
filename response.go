@@ -3,6 +3,7 @@ package jsonrpc
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
 )
 
 // Error codes are defined in the JSON-RPC specification.
@@ -114,6 +115,22 @@ func (res *Response) Validate() error {
 		return &errs
 	}
 	return nil
+}
+
+func (res *Response) HTTPCode() int {
+	if res.Error != nil {
+		switch res.Error.Code {
+		case CodeParseError, CodeInvalidRequest:
+			return http.StatusBadRequest
+		case CodeMethodNotFound:
+			return http.StatusNotFound
+		case CodeInternalError:
+			return http.StatusInternalServerError
+		case CodeInvalidParams:
+			return http.StatusUnprocessableEntity
+		}
+	}
+	return http.StatusOK
 }
 
 // ResponseError is a JSON-RPC error object.
